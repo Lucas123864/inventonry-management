@@ -1,0 +1,168 @@
+{% extends bill_base %}
+{% load static %}
+
+
+{% block title %} Sale Bill No : {{ bill.billno }}{% endblock title %}
+
+
+{% block content %}
+    
+    <div style="color:#efff; font-style: bold; font-size: 3rem;  border-bottom: 1px solid white;">Sale Bill No : {{ bill.billno }}</div>
+
+    <br><br>
+
+    <form method="post">
+    {% csrf_token %}
+
+        <div class="bg">
+
+            <br><br>
+
+            <div id="printArea" class="bg">
+
+                <table class="outer-box inner-box" style="width: 800px; margin-left: auto; margin-right: auto;">
+                    <tbody>
+                    
+                        <tr style="height: 1px;">
+                            <td> <p style="text-align: center;">TAX INVOICE - SALE</p> </td>
+                        </tr>
+                    
+                        <tr style="text-align: center;">
+                            <td >
+                                <span style="font-size: 350%;"><i class="fa-solid fa-person-digging"></i>CIMS <i class="fa-solid fa-person-digging"></i></span> <br>
+                                <span style="font-size: 120%; font-weight: bold; text-decoration: underline;">DEALERS IN : Building Materials</span> <br>
+                                <span style="text-decoration: underline; font-weight: bold;">LOCATION :</span> NAIROBI<br>
+                                <span style="text-decoration: underline; font-weight: bold;">PHONE : +254712345678</span> <br>
+                                <span style="text-decoration: underline; font-weight: bold;">EMAIL : cis@gmail.com</span> <br><br>
+                            </td>
+                        </tr>
+                    
+                        <tr>
+                            <td>
+                            <table class="outer-box" style="width: 800px; margin-left: auto; margin-right: auto;">
+                                <tbody>
+                                    <tr>
+                                        <td class="inner-box" style="width: 50%; font-weight: bold;">&nbsp;NAME OF SUPPLIER</td>
+                                        <td class="inner-box" style="width: 25%; font-weight: bold;">&nbsp;INVOICE NO</td>
+                                        <td class="inner-box" style="width: 25%;">&nbsp;{{ bill.billno }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="inner-box" style="width: 50%;">&nbsp;{{ bill.supplier.name }}</td>
+                                        <td class="inner-box" style="width: 25%; font-weight: bold;">&nbsp;DATE</td>
+                                        <td class="inner-box" style="width: 25%;">&nbsp;{{ bill.time.date }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="inner-box" style="width: 50%;" rowspan="3">{{ bill.address|linebreaks }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="inner-box" style="width: 25%; font-weight: bold;">&nbsp;VEHICLE NO</td>
+                                        <td class="inner-box align-middle" style="width: 25%;"> <input type="text" name="veh" class="align-middle" style="border: 0; overflow: hidden;" value="{{ bill.vehicle }}"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="inner-box" style="width: 25%; font-weight: bold;">&nbsp;ETA</td>
+                                        <td class="inner-box align-middle" style="width: 25%;"> <input type="text" name="veh" class="align-middle" style="border: 0; overflow: hidden;" value="{{ bill.eta}} hrs"> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                            <table class="outer-box" style="width: auto; margin-left: auto; margin-right: auto;">
+                                <tbody>
+                                    <tr>
+                                        <td class="inner-box" style="width: 5%; font-weight: bold; text-align: center;">&nbsp;PURCHASES NO</td>
+                                        <td class="inner-box" style="width: 30%; font-weight: bold; text-align: center;">GOODS</td>
+                                        <td class="inner-box" style="width: 12%; font-weight: bold; text-align: center;">QUANTITY</td>
+                                        <td class="inner-box" style="width: 12%; font-weight: bold; text-align: center;">PRICE/UNIT</td>
+                                        <td class="inner-box" style="width: 12%; font-weight: bold; text-align: center;">AMOUNT</td>
+                                    </tr>
+                                    {% for item in items %}
+                                        <tr style="height: auto;">
+                                            <td class="inner-box" style="width: 5%;">&nbsp; {{ forloop.counter }}</td>
+                                            <td class="inner-box" style="width: 30%;">&nbsp; {{ item.stock.name }}</td>
+                                            <td class="inner-box" style="width: 12%;">&nbsp; {{ item.quantity }}</td>
+                                            <td class="inner-box" style="width: 12%;">&nbsp; {{ item.perprice }}</td>
+                                            <td class="inner-box" style="width: 12%;">&nbsp;{{ item.totalprice }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>
+                            <table class="outer-box inner-box" style="width: 800px; margin-left: auto; margin-right: auto;">
+                                <tbody>
+                                    <tr>
+                                        <td class="inner-box" style="width: 35%; text-align: center;" rowspan="6">
+                                            <p> <span style="font-weight: bold;">PAYMENT DETAILS </span><br>
+                                            BANK AC: 000000000000<br>BRANCH:NAIROBI<br>
+                                            <span style="color: gray">OR</span><br>
+                                            MPESA: TILL NO: 000000
+                                        </p>
+                                        </td>
+                                        <td class="inner-box" style="width: 30%; font-weight: bold;">&nbsp;DISCOUNT</td>
+                                        <td class="inner-box align-middle" style="width: 30%;">&nbsp; <input type="text" name="discount" class="align-middle"  style="border: 0; overflow: hidden;" value="{{ bill.discount }}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="inner-box" style="font-weight: bold;">&nbsp;VAT</td>
+                                        <td class="inner-box align-middle">&nbsp; <input type="text" name="vat" class="align-middle" style="border: 0; overflow: hidden;" value="{{ bill.vat }} "></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="inner-box" style="font-weight: bold;">&nbsp;DELIVERY FEE </td>
+                                        <td class="inner-box align-middle">&nbsp; <input type="text" name="delivery" class="align-middle" style="border: 0; overflow: hidden;" value="{{ bill.delivery_fee }}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="inner-box" style="font-weight: bold;">&nbsp;TOTAL</td>
+                                        <td class="inner-box align-middle">&nbsp; <input type="text" name="total" class="align-middle" style="border: 0; overflow: hidden;" value="{{ bill.get_total }}"> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="text-align: right;">
+                                <span style="font-weight: bold;">FOR COMPANY <br><br><br><br> Signature</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="text-align: center;">
+                                FINAL TEXT
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+
+            <br><br>
+
+        </div>
+
+        <br><br>
+
+        <div class="wrapper">
+            <button class="center ghost-blue" onclick="printpage('printArea')">Print</button>
+            <button class="center ghost-green" type="submit">Save Draft</button>
+            <a href="{% url 'sales-list' %}" class="btn center ghost-button">Go Back</a>
+        </div>
+    
+    </form>
+    
+    <script>
+        function printpage(divName) {
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }       
+        </script>
+
+{% endblock %}
